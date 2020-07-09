@@ -1,0 +1,145 @@
+import sys
+import os
+import json
+
+
+__version__ = 1.0
+__author__ = 'xc'
+
+home_dir = os.path.expanduser('~')
+db_file = '.xc.help.json'
+db_path = os.path.join(home_dir, db_file)
+
+help_dict = {}
+
+
+def init():
+    if not os.path.exists(db_path):
+        return
+    with open(db_path, 'r') as f:
+        content = f.read()
+        try:
+            help_dict.update(json.loads(content))
+        except:
+            pass
+
+
+def usage():
+    print('help usage:\n')
+    print('$help action')
+    print('  print help for action')
+    print('$help action "action arguments"')
+    print('  save help for action')
+
+
+def print_help():
+    spoon = sys.argv[1]
+    not_found = ['help "{}" not found'.format(spoon)]
+    helps = help_dict.get(spoon, not_found)
+    for i, h in enumerate(helps):
+        print(h)
+
+
+def save_help():
+    print('help saved')
+    spoon = sys.argv[2]
+    help_dict[spoon] = help_dict.get(spoon, []) + sys.argv[3:]
+    with open(db_path, 'w') as f:
+        f.write(json.dumps(help_dict, indent=2))
+
+
+def list_help():
+    for key in help_dict.keys():
+        print(key)
+
+
+def find_key_help():
+    arg = sys.argv[2]
+    result_count = 0
+    for key in help_dict.keys():
+        index = key.find(arg)
+        if index != -1:
+            result_count += 1
+            print(key)
+    print('keys find {} result'.format(result_count))
+
+
+def find_value_help():
+    arg = sys.argv[2]
+    result_count = 0
+    for values in help_dict.values():
+        for v in values:
+            index = v.find(arg)
+            if index != -1:
+                result_count += 1
+                print(v)
+    print('values find {} result'.format(result_count))
+
+
+def find_help():
+    find_key_help()
+    find_value_help()
+
+
+def update_help():
+    spoon = sys.argv[2]
+    value = sys.argv[3:]
+    help_dict[spoon] = value
+    with open(db_path, 'w') as f:
+        f.write(json.dumps(help_dict, indent=2))
+    print('help update success')
+
+
+def remove_help():
+    spoon1 = sys.argv[2]
+    spoon2 = sys.argv[3]
+    not_found = ['help "{}" not found'.format(spoon1)]
+    helps = help_dict.get(spoon1, not_found)
+    if int(spoon2) == 0:
+        return remove_help_all(spoon1)
+    value = helps.pop(int(spoon2) - 1)
+    help_dict[spoon2] = value
+    with open(db_path, 'w') as f:
+        f.write(json.dumps(help_dict, indent=2))
+    print('help delete success')
+
+
+def remove_help_all(spoon1):
+    help_dict.pop(spoon1)
+    with open(db_path, 'w') as f:
+        f.write(json.dumps(help_dict, indent=2))
+    print('help delete all success')
+
+
+def help_help():
+    print('-f arg: 查询')
+    print('-fk arg: 在key中查询')
+    print('-fv arg: 在value中查询')
+    print('-l arg: 列出所有key')
+    print('-a arg1 ... : 添加')
+    print('-d arg index: 删除 index=0 为删除全部')
+    print('-u arg1 ... : 覆盖式更新')
+
+
+def main():
+    actions = {
+        '-a': save_help,
+        '-d': remove_help,
+        '-u': update_help,
+        '-l': list_help,
+        '-f': find_help,
+        '-fk': find_key_help,
+        '-fv': find_value_help,
+        '-h': help_help,
+    }
+    if len(sys.argv) < 2:
+        help_help()
+        return
+    arg = sys.argv[1]
+    action = actions.get(arg, print_help)
+    action()
+
+
+if __name__ == '__main__':
+    init()
+    main()
