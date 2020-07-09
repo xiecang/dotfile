@@ -103,8 +103,8 @@ install_zsh_plugins() {
 }
 
 # shellcheck disable=SC2120
-cp_dotfiles() {
-  local __xc_dotfiles=(
+backup_and_cp_dotfiles() {
+    local __xc_dotfiles=(
     .condarc
     .bashrc
     .gitconfig
@@ -114,31 +114,36 @@ cp_dotfiles() {
     .zshrc
   )
   local dryrun="$1"
-  local backupdir=~/.dotfiles.backup
-
+  local backupdir=~/.xcdotfiles.backup
   local file
+
   if [[ ! -d "$backupdir" ]]; then
     ${dryrun} mkdir -p "$backupdir"
   fi
+
   for file in "${__xc_dotfiles[@]}"; do
     if [[ -L ~/"$file" ]]; then
+      echo "$file was linked, unlink.."
       ${dryrun} unlink ~/"$file"
     else
       if [[ -e ~/"$file" ]]; then
+        echo "$file already exists, backup to $backupdir..."
         ${dryrun} cp -rf ~/"$file" "$backupdir/$file"
       fi
     fi
-    ${dryrun} cp -rf "$file" ~/
+    ${dryrun} cp "$file" ~/
   done
 
   unset __xc_dotfiles
+
 }
+
 
 __main() {
   install_basic_software
   clone_this_project
   install_zsh_plugins
-  cp_dotfiles
+  backup_and_cp_dotfiles
 }
 
 __main
