@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/fengchen/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -109,12 +109,9 @@ if which rbenv >/dev/null 2>&1; then
     eval "$(rbenv init -)"
 fi
 
-
-
 # Install Ruby Gems to ~/gems
 export GEM_HOME=$HOME/gems
 export PATH=$HOME/gems/bin:$PATH
-
 
 if [ -d "$HOME/miniconda3/bin" ] ; then
  export PATH="$HOME/miniconda3/bin:$PATH"
@@ -130,21 +127,13 @@ if [ -d "$HOME/adb-fastboot/platform-tools" ] ; then
  export PATH="$HOME/adb-fastboot/platform-tools:$PATH"
 fi
 
-
 # alias
-
-alias q='exit'
-alias quit='exit'
-
-alias ce='crontab -e '
-alias cl='crontab -l '
-alias ed='eval $(docker-machine env default)'
-alias lo='locate '
-
 alias lsn='ls | nl'
 
 # brew install zssh
-alias ssh='zssh'
+if which zssh >/dev/null 2>&1; then
+    alias ssh='zssh'
+fi
 
 # git
 # alias gs='git status'

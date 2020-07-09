@@ -62,6 +62,23 @@ install_useful_software() {
 
 }
 
+clone_this_project() {
+
+  # git clone this project;
+  if [ ! -d $ZSH_CUSTOM ]; then
+    echo "clone $ZSH_CUSTOM ..."
+    git clone https://gitee.com/xc-git/dotfile.git $ZSH_CUSTOM || {
+      printf "Error: git clone xc_dotfile failed."
+      exit 1
+    }
+  else
+    # shellcheck disable=SC2164
+    cd $ZSH_CUSTOM
+    git pull
+    cd $CPWD
+  fi
+}
+
 install_zsh_plugins() {
   # install oh-my-zsh
   if
@@ -85,62 +102,43 @@ install_zsh_plugins() {
 
 }
 
+# shellcheck disable=SC2120
+cp_dotfiles() {
+  local __xc_dotfiles=(
+    .condarc
+    .bashrc
+    .gitconfig
+    .gitignore
+    .tmux.conf
+    .vimrc
+    .zshrc
+  )
+  local dryrun="$1"
+  local backupdir=~/.dotfiles.backup
+
+  local file
+  if [[ ! -d "$backupdir" ]]; then
+    ${dryrun} mkdir -p "$backupdir"
+  fi
+  for file in "${__xc_dotfiles[@]}"; do
+    if [[ -L ~/"$file" ]]; then
+      ${dryrun} unlink ~/"$file"
+    else
+      if [[ -e ~/"$file" ]]; then
+        ${dryrun} cp -rf ~/"$file" "$backupdir/$file"
+      fi
+    fi
+    ${dryrun} cp -rf "$file" ~/
+  done
+
+  unset __xc_dotfiles
+}
+
 __main() {
   install_basic_software
-  install_sed_on_mac
-
-  # git clone this project;
-  if [ ! -d $ZSH_CUSTOM ]; then
-    echo "clone $ZSH_CUSTOM ..."
-    git clone https://github.com/xiecang/dotfile.git $ZSH_CUSTOM || {
-      printf "Error: git clone xc_dotfile failed."
-      exit 1
-    }
-  else
-    # shellcheck disable=SC2164
-    cd $ZSH_CUSTOM
-    git pull
-    cd $CPWD
-  fi
-
-  #   # change .zshrc theme
-  #   if ! grep 'ZSH_THEME="river"' ~/.zshrc >/dev/null 2>&1; then
-  #     # setup .zshrc
-  #     if which sed >/dev/null 2>&1; then
-  #       # backup .zshrc
-  #       cp ~/.zshrc ~/.zshrc.bak
-
-  #       echo "setup ~/.zshrc, use my ZSH_CUSTOM and ZSH_THEME ..."
-  #       code="ZSH_CUSTOM=\"$ZSH_CUSTOM\""
-  #       sed -i "/ZSH_THEME=\"robbyrussell\"/i $code" ~/.zshrc
-  #       sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="river"/' ~/.zshrc
-
-  #       echo "NOTICE: edited ~/.zshrc, remember to run source ~/.zshrc by yourself!"
-  #     else
-  #       echo "WARN: you dont have sed, can't setup .zshrc, you should setup it by yourself!"
-  #     fi
-  #   fi
-
-  # change .zshrc plugins
-  if ! grep 'zsh-syntax-highlighting' ~/.zshrc >/dev/null 2>&1; then
-    # setup .zshrc
-    if which sed >/dev/null 2>&1; then
-      echo "setup zshrc plugins, use python node nvm z extract kubectl zsh-syntax-highlighting zsh-autosuggestions ..."
-
-      # deprecated, ohmyzsh used to be like that.
-      # # clever way to sed multiple lines: https://unix.stackexchange.com/questions/26284/how-can-i-use-sed-to-replace-a-multi-line-string
-      # # and don't cat & write to the same file at the same time!!!
-      # cat ~/.zshrc | tr '\n' '\r' | sed -e 's/\rplugins=(\r  /\rplugins=(\r  python node nvm z extract kubectl zsh-syntax-highlighting zsh-autosuggestions /'  | tr '\r' '\n' > ~/.zshrc.tmp
-      # mv ~/.zshrc.tmp ~/.zshrc
-
-      sed -i 's/plugins=(git)/plugins=(git python node nvm npm z extract zsh-syntax-highlighting zsh-autosuggestions )/' ~/.zshrc
-
-      echo "NOTICE: edited ~/.zshrc, remember to run source ~/.zshrc by yourself!"
-    else
-      echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!"
-    fi
-  fi
-
+  clone_this_project
+  install_zsh_plugins
+  cp_dotfiles
 }
 
 __main
