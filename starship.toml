@@ -1,0 +1,43 @@
+prompt_order = [
+    "username",
+    "hostname",
+    "kubernetes",
+    "directory",
+    "git_branch",
+    "git_state",
+    "git_status",
+    "package",
+    "dotnet",
+    "golang",
+    "java",
+    "nodejs",
+    "python",
+    "ruby",
+    "rust",
+    "nix_shell",
+    "conda",
+    "memory_usage",
+    "aws",
+    "env_var",
+    "cmd_duration",
+    # "right_align", # first right align
+    "time",        # time displayed on first line on the right
+    "line_break",
+    "jobs",
+    "battery",
+    # "time",
+    "character",
+]
+# Replace the "❯" symbol in the prompt with "➜"
+[character]      # The name of the module we are configuring is "character"
+symbol = "➜"     # The "symbol" segment is being set to "➜"
+error_symbol = "✗"
+use_symbol_for_status = true
+
+[time]
+disabled = false
+# format = "🕙[ %T ]"
+# utc_time_offset = -5
+
+# [right_align]
+# character = " "

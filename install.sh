@@ -166,6 +166,24 @@ install_help() {
   fi
 }
 
+# shellcheck disable=SC2120
+init_starship() {
+    # install xc help
+  local dryrun="$1"
+  local configdir=~/.config
+
+
+  if ! (which starship >/dev/null 2>&1); then
+    echo "init starship..."
+
+  if [[ ! -d "$configdir" ]]; then
+    ${dryrun} mkdir -p "$configdir"
+  fi
+
+    ${dryrun} cp starship.toml ~/.config
+  fi
+}
+
 __main() {
   install_basic_software
   clone_this_project
@@ -174,6 +192,7 @@ __main() {
   install_zsh_plugins
   backup_and_cp_dotfiles
   install_help
+  init_starship
   # shellcheck disable=SC2164
   cd "$CPWD"
   echo "Install Success!"
