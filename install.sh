@@ -167,10 +167,13 @@ install_help() {
 __main() {
   install_basic_software
   clone_this_project
+  # shellcheck disable=SC2164
+  cd $ZSH_CUSTOM
   install_zsh_plugins
   backup_and_cp_dotfiles
   install_help
-
+  # shellcheck disable=SC2164
+  cd "$CPWD"
   echo "Install Success!"
 }
 
