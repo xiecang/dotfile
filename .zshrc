@@ -136,6 +136,10 @@ if which zssh >/dev/null 2>&1; then
     alias ssh='zssh'
 fi
 
+if which rmtrash >/dev/null 2>&1; then
+    alias rm='rmtrash '
+fi
+
 # git
 # alias gs='git status'
 # alias ga='git add'
@@ -150,7 +154,6 @@ fi
 # alias gnew='function _new() { git checkout -b $1; git pull origin $1 }; _new'
 
 alias psp='ps aux | grep python'
-alias rm='rmtrash '
 alias rmc='rm *.pyc; rm .cache; rm __pycache__'
 alias rmpyc='find . -name "*.pyc" -exec rm -rf {} \;'
 

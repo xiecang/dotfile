@@ -57,6 +57,8 @@ install_useful_software() {
       echo "install starship..."
       $useroot brew install starship
 
+      echo "install rmtrash"
+      $useroot brew install rmtrash
     fi
   fi
 
