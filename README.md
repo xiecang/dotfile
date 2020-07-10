@@ -1,4 +1,4 @@
-# XieCang Dotfile
+# XC Dotfile
 
 This is my custom zsh theme.
 
