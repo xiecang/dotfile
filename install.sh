@@ -74,7 +74,9 @@ clone_this_project() {
   else
     # shellcheck disable=SC2164
     cd $ZSH_CUSTOM
+    git checkout .
     git pull
+    # shellcheck disable=SC2164
     cd $CPWD
   fi
 }
@@ -100,11 +102,21 @@ install_zsh_plugins() {
     git clone https://gitee.com/xc-git/zsh-autosuggestions.git ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
   fi
 
+  # install autojump
+  if [ ! -d ${ZSH_CUSTOM}/plugins/autojump ]; then
+    echo "clone autojump..."
+    git clone https://gitee.com/xc-git/autojump.git ${ZSH_CUSTOM}/plugins/autojump
+    # shellcheck disable=SC2164
+    cd autojump
+    $useroot ./install.py
+    cd -
+  fi
+
 }
 
 # shellcheck disable=SC2120
 backup_and_cp_dotfiles() {
-    local __xc_dotfiles=(
+  local __xc_dotfiles=(
     .condarc
     .bashrc
     .gitconfig
@@ -138,12 +150,28 @@ backup_and_cp_dotfiles() {
 
 }
 
+# shellcheck disable=SC2120
+install_help() {
+  # install xc help
+  local dryrun="$1"
+  if ! (which help >/dev/null 2>&1); then
+    echo "install help..."
+    ${dryrun} cp help /usr/local/bin/
+  fi
+  if [ ! -d ~/.xc.help.json ]; then
+    echo "init help..."
+    ${dryrun} cp .xc.help.json ~/
+  fi
+}
 
 __main() {
   install_basic_software
   clone_this_project
   install_zsh_plugins
   backup_and_cp_dotfiles
+  install_help
+
+  echo "Install Success!"
 }
 
 __main
