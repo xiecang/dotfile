@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 useroot=""
 if [ "$EUID" -ne 0 ]; then
   useroot="sudo"
@@ -10,6 +12,9 @@ sysinstall() {
   if ! which $1 >/dev/null 2>&1; then
     echo "install $1 ..."
 
+    if which store >/dev/null 2>&1; then
+      $useroot store install $1
+    fi
     if which brew >/dev/null 2>&1; then
       $useroot brew install $1
     fi
@@ -34,33 +39,31 @@ install_basic_software() {
   sysinstall tmux
 }
 
-install_sed_on_mac() {
-
-  # install sed on mac
-  if which brew >/dev/null 2>&1; then
-    if ! which gsed >/dev/null 2>&1; then
-      echo "install gnu-sed..."
-      $useroot brew install gnu-sed
-      sed=gsed
-    fi
-  fi
-
-}
-
 install_useful_software() {
-  # install sed on mac
-  if which brew >/dev/null 2>&1; then
-    if ! which gsed >/dev/null 2>&1; then
+
+if ["$(uname)"=="Darwin"]; then
+  if ! (which store >/dev/null 2>&1); then
+    # install axe store
+    /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
+  fi
+
+  if which store >/dev/null 2>&1; then
+    if ! which zssh >/dev/null 2>&1; then
       echo "install zssh..."
-      $useroot brew install zssh
+      store install zssh
+    fi
 
+    if ! which starship >/dev/null 2>&1; then
       echo "install starship..."
-      $useroot brew install starship
+      store install starship
+    fi
 
-      echo "install rmtrash"
-      $useroot brew install rmtrash
+    if ! which rmtrash >/dev/null 2>&1; then
+      echo "install rmtrash..."
+      store install rmtrash
     fi
   fi
+fi
 
 }
 
@@ -193,6 +196,7 @@ __main() {
   backup_and_cp_dotfiles
   install_help
   init_starship
+  install_useful_software
   # shellcheck disable=SC2164
   cd "$CPWD"
   echo "Install Success!"
