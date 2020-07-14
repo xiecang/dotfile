@@ -130,25 +130,24 @@ backup_and_cp_dotfiles() {
     .vimrc
     .zshrc
   )
-  local dryrun="$1"
   local backupdir=~/.xcdotfiles.backup
   local file
 
   if [[ ! -d "$backupdir" ]]; then
-    ${dryrun} mkdir -p "$backupdir"
+    mkdir -p "$backupdir"
   fi
 
   for file in "${__xc_dotfiles[@]}"; do
     if [[ -L ~/"$file" ]]; then
       echo "$file was linked, unlink.."
-      ${dryrun} unlink ~/"$file"
+      unlink ~/"$file"
     else
       if [[ -e ~/"$file" ]]; then
         echo "$file already exists, backup to $backupdir..."
-        ${dryrun} cp -rf ~/"$file" "$backupdir/$file"
+        cp -rf ~/"$file" "$backupdir/$file"
       fi
     fi
-    ${dryrun} cp "$file" ~/
+    cp "$file" ~/
   done
 
   unset __xc_dotfiles
@@ -158,21 +157,19 @@ backup_and_cp_dotfiles() {
 # shellcheck disable=SC2120
 install_help() {
   # install xc help
-  local dryrun="$1"
   if ! (which help >/dev/null 2>&1); then
     echo "install help..."
-    ${dryrun} cp help /usr/local/bin/
+    cp help /usr/local/bin/
   fi
   if [ ! -d ~/.xc.help.json ]; then
     echo "init help..."
-    ${dryrun} cp .xc.help.json ~/
+    cp .xc.help.json ~/
   fi
 }
 
 # shellcheck disable=SC2120
 init_starship() {
     # install xc help
-  local dryrun="$1"
   local configdir=~/.config
 
 
@@ -180,10 +177,10 @@ init_starship() {
     echo "init starship..."
 
   if [[ ! -d "$configdir" ]]; then
-    ${dryrun} mkdir -p "$configdir"
+    mkdir -p "$configdir"
   fi
 
-    ${dryrun} cp starship.toml ~/.config
+    cp starship.toml ~/.config
   fi
 }
 
