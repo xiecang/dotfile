@@ -147,7 +147,7 @@ backup_and_cp_dotfiles() {
         cp -rf ~/"$file" "$backupdir/$file"
       fi
     fi
-    cp "$file" ~/
+    cp "$ZSH_CUSTOM/$file" ~/
   done
 
   unset __xc_dotfiles
@@ -163,7 +163,7 @@ install_help() {
   fi
   if [ ! -d ~/.xc.help.json ]; then
     echo "init help..."
-    cp .xc.help.json ~/
+    cp "$ZSH_CUSTOM/.xc.help.json" ~/
   fi
 }
 
@@ -180,7 +180,7 @@ init_starship() {
     mkdir -p "$configdir"
   fi
 
-    cp starship.toml ~/.config
+    cp "$ZSH_CUSTOM/starship.toml" ~/.config
   fi
 }
 
