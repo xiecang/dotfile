@@ -109,14 +109,6 @@ clone_this_project() {
 
 init_zshrc() {
   echo "init zshrc..."
-
-  # install sed on mac
-  if ! which gsed >/dev/null 2>&1; then
-    echo "install gnu-sed..."
-    sysinstall gnu-sed
-    sed=gsed
-  fi
-
   # change .zshrc plugins
   if ! grep 'zsh-syntax-highlighting' ~/.zshrc >/dev/null 2>&1; then
     # setup .zshrc
@@ -129,9 +121,11 @@ init_zshrc() {
       # cat ~/.zshrc | tr '\n' '\r' | sed -e 's/\rplugins=(\r  /\rplugins=(\r  python node nvm z extract kubectl zsh-syntax-highlighting zsh-autosuggestions /'  | tr '\r' '\n' > ~/.zshrc.tmp
       # mv ~/.zshrc.tmp ~/.zshrc
 
-      sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
-
-      echo "NOTICE: edited ~/.zshrc, remember to run source ~/.zshrc by yourself!"
+      case "$(uname)" in
+        Darwin*) sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
+        Linux*) sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
+        *) echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!"
+      esac
     else
       echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!"
     fi
