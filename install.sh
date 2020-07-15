@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-useroot=""
-if [ "$EUID" -ne 0 ]; then
-  useroot="sudo"
-fi
-
 ZSH_CUSTOM=~/.xc_dotfile
 CPWD=$(pwd)
 
@@ -13,37 +8,55 @@ sysinstall() {
     echo "install $1 ..."
 
     if which store >/dev/null 2>&1; then
-      $useroot store get $1
+      store get $1
     fi
     if which brew >/dev/null 2>&1; then
-      $useroot brew install $1
+      brew install $1
     fi
     if which apt >/dev/null 2>&1; then
-      $useroot apt install $1
+      apt install $1
     fi
     if which pacman >/dev/null 2>&1; then
-      $useroot pacman -S $1
+      pacman -S $1
     fi
     if which dnf >/dev/null 2>&1; then
-      $useroot dnf install $1
+      dnf install $1
     fi
     if which yum >/dev/null 2>&1; then
-      $useroot yum -y install $1
+      yum -y install $1
     fi
   fi
 }
 
+# shellcheck disable=SC2120
 install_basic_software() {
-  sysinstall zsh
-  sysinstall git
-  sysinstall tmux
+  if ! (which zsh >/dev/null 2>&1); then
+    sysinstall zsh
+  fi
+  if ! (which git >/dev/null 2>&1); then
+    sysinstall git
+  fi
+
+  if [[ $(uname) == 'Darwin' ]]; then
+    # shellcheck disable=SC2230
+    if ( ! (which store >/dev/null 2>&1)) && ( ! (which brew >/dev/null 2>&1)); then
+      echo "No brew or axe store installed, install axe.store ..."
+      install_axe_store
+    fi
+  fi
+
+}
+
+install_axe_store() {
+  if ! (which store >/dev/null 2>&1); then
+    # install axe store
+    /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)" >/dev/null
+  fi
+
 }
 
 install_mac_software() {
-  if ! (which store >/dev/null 2>&1); then
-    # install axe store
-    /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
-  fi
+  install_axe_store
 
   if which store >/dev/null 2>&1; then
     if ! which zssh >/dev/null 2>&1; then
@@ -67,11 +80,11 @@ install_useful_software() {
 
   unameOut="$(uname -s)"
   case "${unameOut}" in
-      Linux*)     machine=Linux;;
-      Darwin*)    machine=Mac && install_mac_software;;
-      CYGWIN*)    machine=Cygwin;;
-      MINGW*)     machine=MinGw;;
-      *)          machine="UNKNOWN:${unameOut}"
+  Linux*) machine=Linux ;;
+  Darwin*) machine=Mac && install_mac_software ;;
+  CYGWIN*) machine=Cygwin ;;
+  MINGW*) machine=MinGw ;;
+  *) machine="UNKNOWN:${unameOut}" ;;
   esac
 }
 
@@ -99,12 +112,8 @@ init_zshrc() {
 
   # install sed on mac
   if ! which gsed >/dev/null 2>&1; then
-    if ! (which store >/dev/null 2>&1); then
-      # install axe store
-      /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
-    fi
     echo "install gnu-sed..."
-    store get gnu-sed
+    sysinstall gnu-sed
     sed=gsed
   fi
 
@@ -135,7 +144,7 @@ install_zsh_plugins() {
     [ ! -d ~/.oh-my-zsh ]
   then
     echo "install oh-my-zsh..."
-    sh -c ./install.ohmyzsh.sh
+    sh -c "$ZSH_CUSTOM/install.ohmyzsh.sh"
   fi
 
   # install zsh-syntax-highlighting
@@ -236,9 +245,9 @@ args="$0"
 
 __main() {
   case "${args}" in
-      zsh*)     install_zsh;;
-      all*)     install_all;;
-      *)        install_zsh;;
+  zsh*) install_zsh ;;
+  all*) install_all ;;
+  *) install_zsh ;;
   esac
 
   # shellcheck disable=SC2164
