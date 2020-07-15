@@ -139,7 +139,7 @@ install_zsh_plugins() {
   then
     echo "install oh-my-zsh..."
     chmod u+x "$ZSH_CUSTOM/install.ohmyzsh.sh"
-    "$ZSH_CUSTOM/install.ohmyzsh.sh" || {
+    /bin/bash -c "$ZSH_CUSTOM/install.ohmyzsh.sh" || {
       printf "Error: install oh-my-zsh failed."
       exit 1
     }
