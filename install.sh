@@ -107,7 +107,7 @@ clone_this_project() {
 __init_mac_zshrc() {
   echo "setup ~/.zshrc, use my ZSH_CUSTOM and ZSH_THEME ..."
   code="ZSH_CUSTOM=\"$ZSH_CUSTOM\""
-  sed -i "" "/ZSH_THEME=\"robbyrussell\"/i $code" ~/.zshrc
+  echo $code>>~/.zshrc
   sed -i "" 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
 }
 
