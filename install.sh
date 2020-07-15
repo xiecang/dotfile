@@ -178,10 +178,7 @@ install_zsh() {
   cd $ZSH_CUSTOM
   install_zsh_plugins
 
-  local __zsh_dotfiles=(
-    .zshrc
-  )
-  backup_and_cp_dotfiles $__zsh_dotfiles
+  backup_and_cp_dotfiles .zshrc
 }
 
 install_all() {
@@ -196,7 +193,7 @@ install_all() {
     .tmux.conf
     .vimrc
   )
-  for file in "${@__dotfiles}"; do
+  for file in "${__dotfiles[@]}"; do
     backup_and_cp_dotfiles $file
   done
 
