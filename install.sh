@@ -56,22 +56,20 @@ install_axe_store() {
 }
 
 install_mac_software() {
-  install_axe_store
-
   if which store >/dev/null 2>&1; then
     if ! which zssh >/dev/null 2>&1; then
       echo "install zssh..."
-      store get zssh
+      sysinstall zssh
     fi
 
     if ! which starship >/dev/null 2>&1; then
       echo "install starship..."
-      store get starship
+      sysinstall starship
     fi
 
     if ! which rmtrash >/dev/null 2>&1; then
       echo "install rmtrash..."
-      store get rmtrash
+      sysinstall rmtrash
     fi
   fi
 }
@@ -102,9 +100,22 @@ clone_this_project() {
     cd $ZSH_CUSTOM
     git checkout .
     git pull
-    # shellcheck disable=SC2164
-    cd $CPWD
+    cd "$CPWD"
   fi
+}
+
+__init_mac_zshrc() {
+  echo "setup ~/.zshrc, use my ZSH_CUSTOM and ZSH_THEME ..."
+  code="ZSH_CUSTOM=\"$ZSH_CUSTOM\""
+  sed -i "" "/ZSH_THEME=\"robbyrussell\"/i $code" ~/.zshrc
+  sed -i "" 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
+}
+
+__init_linux_zshrc() {
+  echo "setup ~/.zshrc, use my ZSH_CUSTOM..."
+  code="ZSH_CUSTOM=\"$ZSH_CUSTOM\""
+  sed -i "/ZSH_THEME=\"robbyrussell\"/i $code" ~/.zshrc
+  sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
 }
 
 init_zshrc() {
@@ -115,16 +126,10 @@ init_zshrc() {
     if which sed >/dev/null 2>&1; then
       echo "setup zshrc plugins, use z extract zsh-syntax-highlighting zsh-autosuggestions ..."
 
-      # deprecated, ohmyzsh used to be like that.
-      # # clever way to sed multiple lines: https://unix.stackexchange.com/questions/26284/how-can-i-use-sed-to-replace-a-multi-line-string
-      # # and don't cat & write to the same file at the same time!!!
-      # cat ~/.zshrc | tr '\n' '\r' | sed -e 's/\rplugins=(\r  /\rplugins=(\r  python node nvm z extract kubectl zsh-syntax-highlighting zsh-autosuggestions /'  | tr '\r' '\n' > ~/.zshrc.tmp
-      # mv ~/.zshrc.tmp ~/.zshrc
-
       case "$(uname)" in
-        Darwin*) sed -i "" 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
-        Linux*) sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
-        *) echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!"
+      Darwin*) __init_mac_zshrc ;;
+      Linux*) __init_linux_zshrc ;;
+      *) echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!" ;;
       esac
     else
       echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!"
@@ -139,7 +144,7 @@ install_zsh_plugins() {
   then
     echo "install oh-my-zsh..."
     chmod u+x "$ZSH_CUSTOM/install.ohmyzsh.sh"
-    sh -c "$(curl -fsSL https://gitee.com/xc-git/dotfile/raw/master/install.ohmyzsh.sh)" 
+    sh -c "$(curl -fsSL https://gitee.com/xc-git/dotfile/raw/master/install.ohmyzsh.sh)"
   fi
 
   # install zsh-syntax-highlighting
@@ -255,5 +260,5 @@ if [[ $? -ne 0 ]]; then
   echo Failed
 else
   echo "Successed, please restart terminal(s) or run source ~/.zshrc."
-	exec zsh -l
+  exec zsh -l
 fi
