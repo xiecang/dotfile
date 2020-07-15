@@ -41,7 +41,16 @@ install_basic_software() {
 
 install_useful_software() {
 
-if "$(uname)" == "Darwin"; then
+  unameOut="$(uname -s)"
+  case "${unameOut}" in
+      Linux*)     machine=Linux;;
+      Darwin*)    machine=Mac;;
+      CYGWIN*)    machine=Cygwin;;
+      MINGW*)     machine=MinGw;;
+      *)          machine="UNKNOWN:${unameOut}"
+  esac
+  
+  if $machine == "Mac"; then
   if ! (which store >/dev/null 2>&1); then
     # install axe store
     /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
