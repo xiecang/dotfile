@@ -74,7 +74,7 @@ install_useful_software() {
       MINGW*)     machine=MinGw;;
       *)          machine="UNKNOWN:${unameOut}"
   esac
-  echo ${machine}
+  # echo ${machine}
 }
 
 clone_this_project() {
@@ -87,12 +87,13 @@ clone_this_project() {
       exit 1
     }
   else
-    # shellcheck disable=SC2164
-    cd $ZSH_CUSTOM
-    git checkout .
-    git pull
-    # shellcheck disable=SC2164
-    cd $CPWD
+    # # shellcheck disable=SC2164
+    # cd $ZSH_CUSTOM
+    # git checkout .
+    # git pull
+    # # shellcheck disable=SC2164
+    # cd $CPWD
+    echo "test"
   fi
 }
 
@@ -116,32 +117,16 @@ install_zsh_plugins() {
     echo "clone zsh-autosuggestions..."
     git clone https://gitee.com/xc-git/zsh-autosuggestions.git ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
   fi
-
-  # install autojump
-  if [ ! -d ${ZSH_CUSTOM}/plugins/autojump ]; then
-    echo "clone autojump..."
-    git clone https://gitee.com/xc-git/autojump.git ${ZSH_CUSTOM}/plugins/autojump
-    # shellcheck disable=SC2164
-    cd autojump
-    $useroot ./install.py
-    cd -
-  fi
-
 }
 
 # shellcheck disable=SC2120
 backup_and_cp_dotfiles() {
-  local __xc_dotfiles=(
-    .condarc
-    .bashrc
-    .gitconfig
-    .gitignore
-    .tmux.conf
-    .vimrc
-    .zshrc
-  )
+  local __xc_dotfiles=$1
   local backupdir=~/.xcdotfiles.backup
   local file
+
+  local backupdir=~/.xcdotfiles.backup
+  echo "backup and cp dotfiles..."
 
   if [[ ! -d "$backupdir" ]]; then
     mkdir -p "$backupdir"
@@ -189,24 +174,58 @@ init_starship() {
   if [[ ! -d "$configdir" ]]; then
     mkdir -p "$configdir"
   fi
-
     cp "$ZSH_CUSTOM/starship.toml" ~/.config
   fi
 }
 
-__main() {
+install_zsh() {
   install_basic_software
   clone_this_project
   # shellcheck disable=SC2164
   cd $ZSH_CUSTOM
   install_zsh_plugins
-  backup_and_cp_dotfiles
+
+  local __zsh_dotfiles=(
+    .zshrc
+  )
+  backup_and_cp_dotfiles $__zsh_dotfiles
+}
+
+install_all() {
+  local __dotfiles=(
+    .condarc
+    .bashrc
+    .gitconfig
+    .gitignore
+    .tmux.conf
+    .vimrc
+  )
+  backup_and_cp_dotfiles $__dotfiles
+
+  install_zsh
   install_help
   init_starship
   install_useful_software
   # shellcheck disable=SC2164
+}
+
+__main() {
+  args="$1"
+  case "${args}" in
+      zsh*)     install_zsh;;
+      all*)     install_all;;
+      *)        install_zsh;;
+  esac
+
+  # shellcheck disable=SC2164
   cd "$CPWD"
-  echo "Install Success!"
 }
 
 __main
+
+
+if [[ $? -ne 0 ]]; then
+    echo Failed
+else
+    echo "Successed, please restart terminal(s) or run source ~/.zshrc."
+fi
