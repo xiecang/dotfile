@@ -87,13 +87,12 @@ clone_this_project() {
       exit 1
     }
   else
-    # # shellcheck disable=SC2164
-    # cd $ZSH_CUSTOM
-    # git checkout .
-    # git pull
-    # # shellcheck disable=SC2164
-    # cd $CPWD
-    echo "test"
+    # shellcheck disable=SC2164
+    cd $ZSH_CUSTOM
+    git checkout .
+    git pull
+    # shellcheck disable=SC2164
+    cd $CPWD
   fi
 }
 
@@ -192,6 +191,9 @@ install_zsh() {
 }
 
 install_all() {
+  echo "install all"
+  install_zsh
+
   local __dotfiles=(
     .condarc
     .bashrc
@@ -202,15 +204,15 @@ install_all() {
   )
   backup_and_cp_dotfiles $__dotfiles
 
-  install_zsh
   install_help
   init_starship
   install_useful_software
   # shellcheck disable=SC2164
 }
 
+args="$1"
+
 __main() {
-  args="$1"
   case "${args}" in
       zsh*)     install_zsh;;
       all*)     install_all;;
