@@ -113,6 +113,7 @@ __init_mac_zshrc() {
   arg="
   /ZSH_THEME=\"robbyrussell\"/ {a\\
     ${code}
+    ZSH_DISABLE_COMPFIX=true
 }
 "
   sed "$arg" ~/.zshrc > /tmp/.xczshrc
@@ -268,6 +269,6 @@ __main
 if [[ $? -ne 0 ]]; then
   echo Failed
 else
-  echo "Successed, please restart terminal(s) or run source ~/.zshrc."
+  echo "Successed"
   exec zsh -l
 fi
