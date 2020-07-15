@@ -141,6 +141,7 @@ backup_and_cp_dotfiles() {
         cp -rf ~/"$file" "$backupdir/$file"
       fi
     fi
+    echo "cp $file..."
     cp "$ZSH_CUSTOM/$file" ~/
   done
 
