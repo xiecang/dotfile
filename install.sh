@@ -122,7 +122,7 @@ init_zshrc() {
       # mv ~/.zshrc.tmp ~/.zshrc
 
       case "$(uname)" in
-        Darwin*) sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
+        Darwin*) sed -i "" 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
         Linux*) sed -i 's/plugins=(git)/plugins=(git z extract zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc;;
         *) echo "WARN you dont have sed, can't setup .zshrc, you should setup it by yourself!"
       esac
