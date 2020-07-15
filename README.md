@@ -9,7 +9,7 @@ This is my custom zsh theme.
     sh -c "$(curl -fsSL https://gitee.com/xc-git/dotfile/raw/master/install.sh)"
 ```
 
-将会安装
+将会安装 (保留原配置)
 - zsh 
 - oh-my-zsh
 - zsh-syntax-highlighting
@@ -25,7 +25,7 @@ This is my custom zsh theme.
 除了会安装 zsh 外
 
 
-将会安装的配置（覆盖式的，如果配置已存在，会原配置备份在 ~/.xcdotfiles.backup）
+将会安装的配置（**覆盖式安装**，如果配置已存在，会原配置备份在 ~/.xcdotfiles.backup）
 - .zshrc 我的 zsh 配置
 - .bashrc bash 配置
 - .condarc  conda 清华源
