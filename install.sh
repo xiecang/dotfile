@@ -41,7 +41,7 @@ install_basic_software() {
 
 install_useful_software() {
 
-if ["$(uname)"=="Darwin"]; then
+if "$(uname)"=="Darwin"; then
   if ! (which store >/dev/null 2>&1); then
     # install axe store
     /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
