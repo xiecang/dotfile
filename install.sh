@@ -13,7 +13,7 @@ sysinstall() {
     echo "install $1 ..."
 
     if which store >/dev/null 2>&1; then
-      $useroot store install $1
+      $useroot store get $1
     fi
     if which brew >/dev/null 2>&1; then
       $useroot brew install $1
@@ -48,17 +48,17 @@ install_mac_software() {
   if which store >/dev/null 2>&1; then
     if ! which zssh >/dev/null 2>&1; then
       echo "install zssh..."
-      store install zssh
+      store get zssh
     fi
 
     if ! which starship >/dev/null 2>&1; then
       echo "install starship..."
-      store install starship
+      store get starship
     fi
 
     if ! which rmtrash >/dev/null 2>&1; then
       echo "install rmtrash..."
-      store install rmtrash
+      store get rmtrash
     fi
   fi
 }
@@ -104,7 +104,7 @@ init_zshrc() {
       /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
     fi
     echo "install gnu-sed..."
-    store install gnu-sed
+    store get gnu-sed
     sed=gsed
   fi
 
