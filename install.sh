@@ -69,12 +69,12 @@ install_useful_software() {
   unameOut="$(uname -s)"
   case "${unameOut}" in
       Linux*)     machine=Linux;;
-      Darwin*)    machine=Mac;;install_mac_software;;
+      Darwin*)    machine=Mac && install_mac_software;;
       CYGWIN*)    machine=Cygwin;;
       MINGW*)     machine=MinGw;;
       *)          machine="UNKNOWN:${unameOut}"
   esac
-
+  echo ${machine}
 }
 
 clone_this_project() {
