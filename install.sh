@@ -122,9 +122,10 @@ __init_mac_zshrc() {
   arg="
   /ZSH_THEME=\"robbyrussell\"/ {a\\
    ZSH_DISABLE_COMPFIX=true
+}
 "
-  sed "$arg" ~/.zshrc >/tmp/.xczshrc
-  mv /tmp/.xczshrc ~/.zshrc
+  sed "$arg" ~/.zshrc >/tmp/.xczshrc1
+  mv /tmp/.xczshrc1 ~/.zshrc
 
 }
 
