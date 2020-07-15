@@ -121,35 +121,25 @@ install_zsh_plugins() {
 # shellcheck disable=SC2120
 backup_and_cp_dotfiles() {
   local backupdir=~/.xcdotfiles.backup
-  local file
+  file=$1
 
   local backupdir=~/.xcdotfiles.backup
-  echo "backup and cp dotfiles..."
-
-  for i in "$@"; do
-    echo "file $i"
-  done
 
   if [[ ! -d "$backupdir" ]]; then
     mkdir -p "$backupdir"
   fi
 
-  for file in "$@"; do
-    if [[ -L ~/"$file" ]]; then
-      echo "$file was linked, unlink.."
-      unlink ~/"$file"
-    else
-      if [[ -e ~/"$file" ]]; then
-        echo "$file already exists, backup to $backupdir..."
-        cp -rf ~/"$file" "$backupdir/$file"
-      fi
+  if [[ -L ~/"$file" ]]; then
+    echo "$file was linked, unlink.."
+    unlink ~/"$file"
+  else
+    if [[ -e ~/"$file" ]]; then
+      echo "$file already exists, backup to $backupdir..."
+      cp -rf ~/"$file" "$backupdir/$file"
     fi
-    echo "cp $file ..."
-    cp "$ZSH_CUSTOM/$file" ~/
-  done
-
-  unset __xc_dotfiles
-
+  fi
+  echo "cp $file ..."
+  cp "$ZSH_CUSTOM/$file" ~/
 }
 
 # shellcheck disable=SC2120
@@ -206,7 +196,9 @@ install_all() {
     .tmux.conf
     .vimrc
   )
-  backup_and_cp_dotfiles $__dotfiles
+  for file in "${@__dotfiles}"; do
+    backup_and_cp_dotfiles $file
+  done
 
   install_help
   init_starship
