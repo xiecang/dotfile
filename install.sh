@@ -120,7 +120,6 @@ install_zsh_plugins() {
 
 # shellcheck disable=SC2120
 backup_and_cp_dotfiles() {
-  local __xc_dotfiles=$1
   local backupdir=~/.xcdotfiles.backup
   local file
 
@@ -131,7 +130,7 @@ backup_and_cp_dotfiles() {
     mkdir -p "$backupdir"
   fi
 
-  for file in "${__xc_dotfiles[@]}"; do
+  for file in "$@"; do
     if [[ -L ~/"$file" ]]; then
       echo "$file was linked, unlink.."
       unlink ~/"$file"
@@ -141,7 +140,7 @@ backup_and_cp_dotfiles() {
         cp -rf ~/"$file" "$backupdir/$file"
       fi
     fi
-    echo "cp $file..."
+    echo "cp $file ..."
     cp "$ZSH_CUSTOM/$file" ~/
   done
 
