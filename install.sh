@@ -39,18 +39,8 @@ install_basic_software() {
   sysinstall tmux
 }
 
-install_useful_software() {
 
-  unameOut="$(uname -s)"
-  case "${unameOut}" in
-      Linux*)     machine=Linux;;
-      Darwin*)    machine=Mac;;
-      CYGWIN*)    machine=Cygwin;;
-      MINGW*)     machine=MinGw;;
-      *)          machine="UNKNOWN:${unameOut}"
-  esac
-  
-  if $machine == "Mac"; then
+install_mac_software() {
   if ! (which store >/dev/null 2>&1); then
     # install axe store
     /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)"
@@ -72,7 +62,18 @@ install_useful_software() {
       store install rmtrash
     fi
   fi
-fi
+}
+
+install_useful_software() {
+
+  unameOut="$(uname -s)"
+  case "${unameOut}" in
+      Linux*)     machine=Linux;;
+      Darwin*)    machine=Mac;;install_mac_software;;
+      CYGWIN*)    machine=Cygwin;;
+      MINGW*)     machine=MinGw;;
+      *)          machine="UNKNOWN:${unameOut}"
+  esac
 
 }
 
