@@ -126,6 +126,10 @@ backup_and_cp_dotfiles() {
   local backupdir=~/.xcdotfiles.backup
   echo "backup and cp dotfiles..."
 
+  for i in "$@"; do
+    echo "file $i"
+  done
+
   if [[ ! -d "$backupdir" ]]; then
     mkdir -p "$backupdir"
   fi
