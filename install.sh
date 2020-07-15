@@ -255,4 +255,5 @@ if [[ $? -ne 0 ]]; then
   echo Failed
 else
   echo "Successed, please restart terminal(s) or run source ~/.zshrc."
+	exec zsh -l
 fi
