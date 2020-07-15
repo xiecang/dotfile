@@ -138,7 +138,11 @@ install_zsh_plugins() {
     [ ! -d ~/.oh-my-zsh ]
   then
     echo "install oh-my-zsh..."
-    sh -c "$ZSH_CUSTOM/install.ohmyzsh.sh"
+    chmod u+x "$ZSH_CUSTOM/install.ohmyzsh.sh"
+    "$ZSH_CUSTOM/install.ohmyzsh.sh" || {
+      printf "Error: install oh-my-zsh failed."
+      exit 1
+    }
   fi
 
   # install zsh-syntax-highlighting
