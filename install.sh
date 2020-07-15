@@ -139,10 +139,7 @@ install_zsh_plugins() {
   then
     echo "install oh-my-zsh..."
     chmod u+x "$ZSH_CUSTOM/install.ohmyzsh.sh"
-    sh -c "$(curl -fsSL https://gitee.com/xc-git/dotfile/raw/master/install.ohmyzsh.sh)"  || {
-      printf "Error: install oh-my-zsh failed."
-      exit 1
-    }
+    sh -c "$(curl -fsSL https://gitee.com/xc-git/dotfile/raw/master/install.ohmyzsh.sh)" 
   fi
 
   # install zsh-syntax-highlighting
