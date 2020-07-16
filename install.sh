@@ -56,21 +56,20 @@ install_axe_store() {
 }
 
 install_mac_software() {
-  if which store >/dev/null 2>&1; then
-    if ! which zssh >/dev/null 2>&1; then
-      echo "install zssh..."
-      sysinstall zssh
-    fi
+  if ! which zssh >/dev/null 2>&1; then
+    echo "install zssh..."
+    sysinstall zssh
+  fi
 
-    if ! which starship >/dev/null 2>&1; then
-      echo "install starship..."
-      sysinstall starship
-    fi
+  if ! which starship >/dev/null 2>&1; then
+    echo "install starship..."
+    sysinstall starship
+    init_starship
+  fi
 
-    if ! which rmtrash >/dev/null 2>&1; then
-      echo "install rmtrash..."
-      sysinstall rmtrash
-    fi
+  if ! which rmtrash >/dev/null 2>&1; then
+    echo "install rmtrash..."
+    sysinstall rmtrash
   fi
 }
 
@@ -255,7 +254,6 @@ install_all() {
   done
 
   install_help
-  init_starship
   install_useful_software
 }
 
