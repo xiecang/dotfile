@@ -4,6 +4,7 @@ ZSH_CUSTOM=~/.xc_dotfile
 CPWD=$(pwd)
 
 sysinstall() {
+  install_mac_cli
   if ! which $1 >/dev/null 2>&1; then
     echo "install $1 ..."
 
@@ -28,15 +29,7 @@ sysinstall() {
   fi
 }
 
-# shellcheck disable=SC2120
-install_basic_software() {
-  if ! (which zsh >/dev/null 2>&1); then
-    sysinstall zsh
-  fi
-  if ! (which git >/dev/null 2>&1); then
-    sysinstall git
-  fi
-
+install_mac_cli() {
   if [[ $(uname) == 'Darwin' ]]; then
     # shellcheck disable=SC2230
     if ( ! (which store >/dev/null 2>&1)) && ( ! (which brew >/dev/null 2>&1)); then
@@ -45,6 +38,16 @@ install_basic_software() {
     fi
   fi
 
+}
+
+# shellcheck disable=SC2120
+install_basic_software() {
+  if ! (which zsh >/dev/null 2>&1); then
+    sysinstall zsh
+  fi
+  if ! (which git >/dev/null 2>&1); then
+    sysinstall git
+  fi
 }
 
 install_axe_store() {
