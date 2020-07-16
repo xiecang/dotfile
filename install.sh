@@ -8,6 +8,9 @@ sysinstall() {
   if ! which $1 >/dev/null 2>&1; then
     echo "install $1 ..."
 
+    if which store.axe >/dev/null 2>&1; then
+      store get $1
+    fi
     if which store >/dev/null 2>&1; then
       store get $1
     fi
@@ -32,8 +35,9 @@ sysinstall() {
 install_mac_cli() {
   if [[ $(uname) == 'Darwin' ]]; then
     # shellcheck disable=SC2230
-    if ( ! (which store >/dev/null 2>&1)) && ( ! (which brew >/dev/null 2>&1)); then
+    if ( ! (which store >/dev/null 2>&1)) && ( ! (which store.axe >/dev/null 2>&1)) && ( ! (which brew >/dev/null 2>&1)); then
       echo "No brew or axe store installed, install axe.store ..."
+      echo "NOTICE: After the installation is complete, re-execute the installation command to complete the next steps!"
       install_axe_store
     fi
   fi
