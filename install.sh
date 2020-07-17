@@ -64,18 +64,15 @@ install_axe_store() {
 
 install_mac_software() {
   if ! which zssh >/dev/null 2>&1; then
-    echo "install zssh..."
     sysinstall zssh
   fi
 
   if ! which starship >/dev/null 2>&1; then
-    echo "install starship..."
     sysinstall starship
     init_starship
   fi
 
   if ! which rmtrash >/dev/null 2>&1; then
-    echo "install rmtrash..."
     sysinstall rmtrash
   fi
 }
@@ -249,6 +246,7 @@ install_all() {
   install_zsh
 
   local __dotfiles=(
+    .zshrc
     .condarc
     .bashrc
     .gitconfig
