@@ -9,7 +9,7 @@ sysinstall() {
     echo "install $1 ..."
 
     if which store.axe >/dev/null 2>&1; then
-      store get $1
+      store.axe get $1
     fi
     if which store >/dev/null 2>&1; then
       store get $1
