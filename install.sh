@@ -10,23 +10,17 @@ sysinstall() {
 
     if which store.axe >/dev/null 2>&1; then
       store.axe get $1
-    fi
-    if which store >/dev/null 2>&1; then
+    elif which store >/dev/null 2>&1; then
       store get $1
-    fi
-    if which brew >/dev/null 2>&1; then
+    elif which brew >/dev/null 2>&1; then
       brew install $1
-    fi
-    if which apt >/dev/null 2>&1; then
+    elif which apt >/dev/null 2>&1; then
       apt install $1
-    fi
-    if which pacman >/dev/null 2>&1; then
+    elif which pacman >/dev/null 2>&1; then
       pacman -S $1
-    fi
-    if which dnf >/dev/null 2>&1; then
+    elif which dnf >/dev/null 2>&1; then
       dnf install $1
-    fi
-    if which yum >/dev/null 2>&1; then
+    elif which yum >/dev/null 2>&1; then
       yum -y install $1
     fi
   fi
