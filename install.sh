@@ -49,7 +49,7 @@ install_basic_software() {
 }
 
 install_axe_store() {
-  if ! (which store >/dev/null 2>&1); then
+  if ( ! (which store >/dev/null 2>&1)) && ( ! (which store.axe >/dev/null 2>&1)); then
     # install axe store
     /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)" >/dev/null
   fi
@@ -57,6 +57,8 @@ install_axe_store() {
 }
 
 install_mac_software() {
+  install_axe_store
+
   if ! which zssh >/dev/null 2>&1; then
     sysinstall zssh
   fi
