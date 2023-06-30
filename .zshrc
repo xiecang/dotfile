@@ -177,7 +177,7 @@ alias ....="cd ../../.."
 
 
 # alias for proxy  export ALL_PROXY=socks5://127.0.0.1:1080; unset ALL_PROXY;
-alias proxy="export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;"
+alias proxy="export http_proxy=http://127.0.0.1:7890;export https_proxy=http://127.0.0.1:7890;"
 alias unproxy="unset http_proxy;unset https_proxy;"
 
 
@@ -201,3 +201,5 @@ jenvenable() {
     export PATH="$HOME/.jenv/bin:$PATH"
     eval "$(jenv init -)"
 }
+
+ export PATH=$HOME/bin:/usr/local/bin:/opt/homebrew/bin:$PATH

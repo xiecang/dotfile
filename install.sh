@@ -32,7 +32,8 @@ install_mac_cli() {
     if ( ! (which store >/dev/null 2>&1)) && ( ! (which store.axe >/dev/null 2>&1)) && ( ! (which brew >/dev/null 2>&1)); then
       echo "No brew or axe store installed, install axe.store ..."
       echo "NOTICE: After the installation is complete, re-execute the installation command to complete the next steps!"
-      install_axe_store
+      # install_axe_store
+      install_brew
     fi
   fi
 
@@ -54,6 +55,14 @@ install_axe_store() {
     /bin/bash -c "$(curl -fsSL https://gitee.com/kuaibiancheng/store/raw/master/install.sh)" >/dev/null
   fi
 
+}
+
+
+install_brew() {
+  if ( ! (which brew >/dev/null 2>&1)); then
+    # install brew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"  
+  fi
 }
 
 install_mac_software() {
@@ -90,7 +99,7 @@ clone_this_project() {
   # git clone this project;
   if [ ! -d $ZSH_CUSTOM ]; then
     echo "clone $ZSH_CUSTOM ..."
-    git clone https://gitee.com/xc-git/dotfile.git $ZSH_CUSTOM || {
+    git clone https://github.com/xiecang/dotfile.git $ZSH_CUSTOM || {
       printf "Error: git clone xc_dotfile failed."
       exit 1
     }
@@ -161,29 +170,28 @@ install_zsh_plugins() {
   then
     echo "install oh-my-zsh..."
     chmod u+x "$ZSH_CUSTOM/install.ohmyzsh.sh"
-    sh -c "$(curl -fsSL https://gitee.com/xc-git/dotfile/raw/master/install.ohmyzsh.sh)"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   fi
 
   # install zsh-syntax-highlighting
   if [ ! -d ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting ]; then
     echo "clone zsh-syntax-highlighting..."
-    git clone https://gitee.com/xc-git/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
   fi
 
   # install zsh-autosuggestions
   if [ ! -d ${ZSH_CUSTOM}/plugins/zsh-autosuggestions ]; then
     echo "clone zsh-autosuggestions..."
-    git clone https://gitee.com/xc-git/zsh-autosuggestions.git ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
   fi
 
   init_zshrc
 }
 
 backup_and_cp_dotfiles() {
-  local backupdir=~/.xcdotfiles.backup
-  file=$1
+  local file=$1
 
-  local backupdir=~/.xcdotfiles.backup
+  local backupdir="~/.xcdotfiles.backup.$(date '+%Y-%m-%d_%H:%M')"
 
   if [[ ! -d "$backupdir" ]]; then
     mkdir -p "$backupdir"
