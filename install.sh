@@ -262,8 +262,8 @@ install_all() {
     backup_and_cp_dotfiles $file
   done
 
-  install_help
-  install_useful_software
+#  install_help
+#  install_useful_software
 }
 
 args="$0"
