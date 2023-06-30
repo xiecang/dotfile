@@ -202,4 +202,4 @@ jenvenable() {
     eval "$(jenv init -)"
 }
 
- export PATH=$HOME/bin:/usr/local/bin:/opt/homebrew/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:/opt/homebrew/bin:$PATH
